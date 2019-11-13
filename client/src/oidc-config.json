@@ -1,0 +1,5 @@
+{
+  "issuer": "http://localhost:8080/auth/realms/example",
+  "clientId": "angular-with-oidc",
+  "scope": "openid profile"
+}

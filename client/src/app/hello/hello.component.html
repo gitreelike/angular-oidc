@@ -1,0 +1,23 @@
+<div>
+  <div>
+    <h1>Welcome, have a look around</h1>
+    <ul>
+      <li>Have a look at our precious <a routerLink="./foo">foo</a> and wait there for your token to time out.</li>
+    </ul>
+
+    <h2>Authentication status:</h2>
+    <ul>
+      <li><b>Access Token Expiration</b>: {{ accessTokenExpiration }}</li>
+      <li>
+        <b>Access Token</b> (<a href="https://jwt.io?token={{accessToken}}" target="_blank">view on jwt.io</a>):<br/>
+        <textarea class="token" readonly="true" [value]="accessToken"></textarea>
+        <textarea class="token" readonly="true" [value]="accessTokenDecoded"></textarea>
+      </li>
+      <li><b>Id Token</b> (<a href="https://jwt.io?token={{idToken}}" target="_blank">view on jwt.io</a>):<br/>
+        <textarea class="token" readonly="true" [value]="idToken"></textarea>
+        <textarea class="token" readonly="true" [value]="idTokenDecoded"></textarea></li>
+    </ul>
+
+  </div>
+</div>
+
