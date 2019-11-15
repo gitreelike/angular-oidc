@@ -1,0 +1,5 @@
+<div *ngIf="error">
+  <h1>There was an error during login:</h1>
+  <textarea style="width: 500px; height: 500px;" [value]="error"></textarea>
+</div>
+<div *ngIf="!error">No login errors.</div>

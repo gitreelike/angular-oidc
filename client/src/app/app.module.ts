@@ -9,10 +9,12 @@ import {AuthService} from "./auth/auth.service";
 import {FooComponent} from "./foo/foo.component";
 import {HelloComponent} from './hello/hello.component';
 import {CountdownModule} from "ngx-countdown";
+import {ErrorComponent} from "./error/error.component";
 
 @NgModule({
   declarations: [
     AppComponent,
+    ErrorComponent,
     FooComponent,
     HelloComponent
   ],
@@ -24,7 +26,7 @@ import {CountdownModule} from "ngx-countdown";
     CountdownModule
   ],
   providers: [],
-  entryComponents: [AppComponent]
+  entryComponents: [AppComponent, ErrorComponent]
 })
 export class AppModule implements DoBootstrap {
   constructor(private authService: AuthService) {}
@@ -36,6 +38,8 @@ export class AppModule implements DoBootstrap {
       })
       .catch(error => {
         console.error(`[ngDoBootstrap] Problem while authService.bootstrapAuthService(): ${JSON.stringify(error)}`, error);
+
+        app.bootstrap(ErrorComponent)
       });
   }
 

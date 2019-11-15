@@ -19,17 +19,26 @@ export class AuthService {
               private router: Router) {}
 
   async bootstrapAuthService(): Promise<void> {
-    await this.configureOAuthService();
+    try {
+      await this.configureOAuthService();
 
-    await this.tryLogin();
+      await this.tryLogin();
 
-    if (!this.oauthService.hasValidAccessToken()) {
-      await this.startImplicitFlow();
-    } else {
-      this.oauthService.setupAutomaticSilentRefresh();
+      if (!this.oauthService.hasValidAccessToken()) {
+        await this.startImplicitFlow();
+      } else {
+        this.oauthService.setupAutomaticSilentRefresh();
 
-      this.router.initialNavigation();
+        this.router.initialNavigation();
+      }
+    } catch (e) {
+      this.errorDuringBootstrap = e;
+      throw e;
     }
+  }
+
+  public get bootstrapError(): any {
+    return this.errorDuringBootstrap;
   }
 
   private async startImplicitFlow(): Promise<void> {
