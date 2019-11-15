@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AuthConfig, JwksValidationHandler, OAuthService} from 'angular-oauth2-oidc';
-import {Observable, of} from 'rxjs';
+import {Router} from "@angular/router";
 
 const OIDC_CONFIG_URL = `/oidc-config.json`;
 
@@ -15,19 +15,35 @@ export class AuthService {
 
   private errorDuringBootstrap: any = undefined;
 
-  constructor(private oauthService: OAuthService) {}
+  constructor(private oauthService: OAuthService,
+              private router: Router) {}
 
   async bootstrapAuthService(): Promise<void> {
     await this.configureOAuthService();
 
-    await this.oauthService.tryLoginImplicitFlow();
-
+    await this.tryLogin();
 
     if (!this.oauthService.hasValidAccessToken()) {
-      this.oauthService.initImplicitFlow();
+      await this.startImplicitFlow();
     } else {
       this.oauthService.setupAutomaticSilentRefresh();
+
+      this.router.initialNavigation();
     }
+  }
+
+  private async startImplicitFlow(): Promise<void> {
+    const state = isAngularRouteHash() ? window.location.hash : '';
+    this.oauthService.initImplicitFlow(state);
+  }
+
+  private async tryLogin() {
+    await this.oauthService.tryLoginImplicitFlow({
+      onTokenReceived: info => {
+        window.location.hash = info.state;
+      },
+      customHashFragment: isAngularRouteHash() ? '' : window.location.hash
+    });
   }
 
   private async configureOAuthService() {
@@ -49,7 +65,9 @@ export class AuthService {
       scope: 'openid profile',
 
       redirectUri: currentLocation,
-      silentRefreshRedirectUri: `${currentLocation}${slashIfNeeded}silent-refresh.html`
+      silentRefreshRedirectUri: `${currentLocation}${slashIfNeeded}silent-refresh.html`,
+
+      clearHashAfterLogin: false
     });
   }
 
