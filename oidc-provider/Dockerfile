@@ -4,7 +4,7 @@ ENV KEYCLOAK_USER=admin
 ENV KEYCLOAK_PASSWORD=admin
 ENV KEYCLOAK_IMPORT=/tmp/example-realm.json
 
-RUN keycloak/bin/add-user-keycloak.sh -r example -u test -p test
+RUN /opt/jboss/keycloak/bin/add-user-keycloak.sh -r example -u test -p test
 
 COPY config/example-realm.json /tmp
 
